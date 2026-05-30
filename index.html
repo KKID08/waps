@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <meta name="theme-color" content="#0f172a" />
+  <title>WAPS — Navigation</title>
+
+  <!-- MapLibre GL JS (vector rendering for smooth pan/zoom/pitch) -->
+  <link href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" rel="stylesheet" />
+  <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
+
+  <!-- UI typography + icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,1,0&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="src/css/styles.css" />
+</head>
+<body>
+  <div id="map"></div>
+
+  <!-- ====================== PLANNING UI ====================== -->
+  <div id="planner" class="panel glass">
+    <div class="profiles" id="profiles">
+      <button class="profile" data-profile="car" aria-label="Auto">
+        <span class="material-symbols-rounded">directions_car</span><span class="profile-eta"></span>
+      </button>
+      <button class="profile" data-profile="bike" aria-label="Fahrrad">
+        <span class="material-symbols-rounded">directions_bike</span><span class="profile-eta"></span>
+      </button>
+      <button class="profile" data-profile="foot" aria-label="Zu Fuß">
+        <span class="material-symbols-rounded">directions_walk</span><span class="profile-eta"></span>
+      </button>
+    </div>
+
+    <div class="fields">
+      <div class="dots">
+        <span class="dot origin-dot"></span>
+        <span class="dot-line"></span>
+        <span class="dot dest-dot"><span class="material-symbols-rounded">place</span></span>
+      </div>
+      <div class="field-stack">
+        <div class="field">
+          <input id="origin-input" type="text" placeholder="Startpunkt" autocomplete="off" />
+          <button class="field-loc" id="use-location" title="Aktueller Standort">
+            <span class="material-symbols-rounded">my_location</span>
+          </button>
+        </div>
+        <div class="field">
+          <input id="dest-input" type="text" placeholder="Wohin?" autocomplete="off" />
+          <button class="field-clear" id="clear-dest" title="Löschen">
+            <span class="material-symbols-rounded">close</span>
+          </button>
+        </div>
+      </div>
+      <button class="swap" id="swap" title="Tauschen">
+        <span class="material-symbols-rounded">swap_vert</span>
+      </button>
+    </div>
+
+    <ul id="suggestions" class="suggestions" hidden></ul>
+  </div>
+
+  <!-- ====================== FLOATING CONTROLS ====================== -->
+  <div class="fab-stack">
+    <button class="fab" id="theme-toggle" title="Design wechseln">
+      <span class="material-symbols-rounded">dark_mode</span>
+    </button>
+    <button class="fab" id="geolocate" title="Mein Standort">
+      <span class="material-symbols-rounded">near_me</span>
+    </button>
+  </div>
+
+  <!-- ====================== ROUTE SUMMARY SHEET ====================== -->
+  <div id="route-sheet" class="sheet glass" hidden>
+    <div class="sheet-handle"></div>
+    <div class="route-summary">
+      <div class="route-headline">
+        <span class="route-time" id="route-time">—</span>
+        <span class="route-dist" id="route-dist"></span>
+      </div>
+      <div class="route-sub" id="route-arrival"></div>
+      <button class="go-btn" id="go-btn">
+        <span class="material-symbols-rounded">navigation</span> Los
+      </button>
+    </div>
+    <div class="alt-routes" id="alt-routes"></div>
+    <button class="steps-toggle" id="steps-toggle">
+      <span class="material-symbols-rounded">list</span> Schritte anzeigen
+    </button>
+    <ol class="steps" id="steps" hidden></ol>
+  </div>
+
+  <!-- ====================== TURN-BY-TURN NAV UI ====================== -->
+  <div id="nav-top" class="nav-top" hidden>
+    <div class="maneuver-icon"><span class="material-symbols-rounded" id="nav-icon">navigation</span></div>
+    <div class="maneuver-text">
+      <div class="maneuver-dist" id="nav-dist">—</div>
+      <div class="maneuver-instr" id="nav-instr">Navigation startet…</div>
+    </div>
+  </div>
+
+  <div id="nav-bottom" class="nav-bottom glass" hidden>
+    <button class="nav-end" id="nav-end" title="Beenden">
+      <span class="material-symbols-rounded">close</span>
+    </button>
+    <div class="nav-stats">
+      <span class="nav-eta" id="nav-eta">—</span>
+      <span class="nav-detail"><span id="nav-remaining">—</span> · <span id="nav-arrival">—</span></span>
+    </div>
+    <button class="nav-tool" id="nav-voice" title="Sprachausgabe">
+      <span class="material-symbols-rounded">volume_up</span>
+    </button>
+    <button class="nav-tool" id="nav-recenter" title="Zentrieren" hidden>
+      <span class="material-symbols-rounded">explore</span>
+    </button>
+  </div>
+
+  <!-- Toast for transient messages -->
+  <div id="toast" class="toast" hidden></div>
+
+  <div id="loading" class="loading" hidden><div class="spinner"></div></div>
+
+  <script type="module" src="src/js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,12 @@
+{
+  "name": "waps",
+  "version": "1.0.0",
+  "description": "WAPS — a polished OpenStreetMap navigation app for foot, bike and car.",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "keywords": ["navigation", "openstreetmap", "maplibre", "routing", "gps"],
+  "license": "MIT"
+}
