@@ -1,0 +1,48 @@
+name: Deploy to GitHub Pages
+
+# Deploys the static site (repo root) to GitHub Pages.
+# Runs on pushes to the development branch and main, and can be triggered
+# manually from the Actions tab.
+on:
+  push:
+    branches:
+      - main
+      - claude/osm-navigation-app-8zwnl
+  workflow_dispatch:
+
+# Permissions required by the Pages deployment action.
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Allow one concurrent deployment; newer runs cancel in-progress ones.
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # Auto-enables Pages for the repo if it isn't enabled yet.
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+        with:
+          enablement: true
+
+      # Package the whole repo root as the static site.
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: .
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
